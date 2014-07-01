@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+
+  <display-name>CAS echo webapp</display-name>
+
+  <!-- The params are configured as context-param's to reduce repetition -->
+  <context-param>
+    <param-name>casServerLoginUrl</param-name>
+    <param-value>https://hebron.acu.edu/cas/login</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>serverName</param-name>
+    <param-value>https://hebron.acu.edu</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>casServerUrlPrefix</param-name>
+    <param-value>https://hebron.acu.edu/cas</param-value>
+  </context-param>
+
+  <!-- Set useSession to false so we can continue testing with each request -->
+  <context-param>
+    <param-name>useSession</param-name>
+    <param-value>false</param-value>
+  </context-param>
+
+  <!-- We aren't using a session.  If we do a redirect, we will lose data. -->
+  <context-param>
+    <param-name>redirectAfterValidation</param-name>
+    <param-value>false</param-value>
+  </context-param>
+
+  <filter>
+    <filter-name>CAS Authentication Filter</filter-name>
+    <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>CAS SAML 1.1 Authentication Filter</filter-name>
+    <filter-class>org.jasig.cas.client.authentication.Saml11AuthenticationFilter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>CAS 1.0 Validation Filter</filter-name>
+    <filter-class>org.jasig.cas.client.validation.Cas10TicketValidationFilter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>CAS SAML 1.1 Validation Filter</filter-name>
+    <filter-class>org.jasig.cas.client.validation.Saml11TicketValidationFilter</filter-class>
+  </filter>
+
+  <!-- Since we don't set acceptAnyProxy, allowedProxyChains or ticketValidatorClass this will use 
+       Cas20ServiceTicketValidator and won't support proxy tickets -->
+  <filter>
+    <filter-name>CAS 2.0 Validation Filter</filter-name>
+    <filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
+  </filter>
+
+  <filter>
+    <filter-name>CAS 3.0 Validation Filter</filter-name>
+    <filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
+    <init-param>
+      <param-name>casServerUrlPrefix</param-name>
+      <param-value>https://hebron.acu.edu/cas/p3</param-value>
+    </init-param>
+  </filter>
+  
+  <!-- CAS 1.0 Protocol -->
+  <servlet>
+  	<servlet-name>cas1.0</servlet-name>
+  	<jsp-file>/main.jsp</jsp-file>
+  	<init-param>
+      <param-name>title</param-name>
+      <param-value>CAS 1.0</param-value>
+  	</init-param>
+  </servlet>
+  <filter-mapping>
+  	<filter-name>CAS Authentication Filter</filter-name>
+  	<servlet-name>cas1.0</servlet-name>
+  </filter-mapping>
+  <filter-mapping>
+  	<filter-name>CAS 1.0 Validation Filter</filter-name>
+  	<servlet-name>cas1.0</servlet-name>
+  </filter-mapping>
+  <servlet-mapping>
+  	<servlet-name>cas1.0</servlet-name>
+  	<url-pattern>/cas1.0</url-pattern>
+  </servlet-mapping>
+  
+  <!-- CAS 2.0 Protocol -->
+  <servlet>
+  	<servlet-name>cas2.0</servlet-name>
+  	<jsp-file>/main.jsp</jsp-file>
+  	<init-param>
+      <param-name>title</param-name>
+      <param-value>CAS 2.0</param-value>
+  	</init-param>
+  </servlet>
+  <filter-mapping>
+  	<filter-name>CAS Authentication Filter</filter-name>
+  	<servlet-name>cas2.0</servlet-name>
+  </filter-mapping>
+  <filter-mapping>
+  	<filter-name>CAS 2.0 Validation Filter</filter-name>
+  	<servlet-name>cas2.0</servlet-name>
+  </filter-mapping>
+  <servlet-mapping>
+  	<servlet-name>cas2.0</servlet-name>
+  	<url-pattern>/cas2.0</url-pattern>
+  </servlet-mapping>
+
+  <!-- CAS 3.0 Protocol -->
+  <servlet>
+    <servlet-name>cas3.0</servlet-name>
+    <jsp-file>/main.jsp</jsp-file>
+    <init-param>
+      <param-name>title</param-name>
+      <param-value>CAS 3.0</param-value>
+    </init-param>
+  </servlet>
+  <filter-mapping>
+    <filter-name>CAS Authentication Filter</filter-name>
+    <servlet-name>cas3.0</servlet-name>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>CAS 3.0 Validation Filter</filter-name>
+    <servlet-name>cas3.0</servlet-name>
+  </filter-mapping>
+  <servlet-mapping>
+    <servlet-name>cas3.0</servlet-name>
+    <url-pattern>/cas3.0</url-pattern>
+  </servlet-mapping>
+  
+  <!-- SAML 1.1 -->
+  <servlet>
+  	<servlet-name>saml1.1</servlet-name>
+  	<jsp-file>/main.jsp</jsp-file>
+  	<init-param>
+      <param-name>title</param-name>
+      <param-value>SAML 1.1</param-value>
+  	</init-param>
+  </servlet>
+  <filter-mapping>
+  	<filter-name>CAS SAML 1.1 Authentication Filter</filter-name>
+  	<servlet-name>saml1.1</servlet-name>
+  </filter-mapping>
+  <filter-mapping>
+  	<filter-name>CAS SAML 1.1 Validation Filter</filter-name>
+  	<servlet-name>saml1.1</servlet-name>
+  </filter-mapping>
+  <servlet-mapping>
+  	<servlet-name>saml1.1</servlet-name>
+  	<url-pattern>/saml1.1</url-pattern>
+  </servlet-mapping>
+  
+  <!-- TODO: add restful and oauth -->
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
